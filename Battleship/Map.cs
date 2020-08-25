@@ -44,7 +44,7 @@ namespace Battleship
 
         #region Actions
 
-        public void SetUnit(string unitType, int dir, int i,int j, bool owner)
+        public bool SetUnit(string unitType, int dir, int i,int j, bool owner)
         {
             int size = 0;
             int value = 0;
@@ -55,23 +55,26 @@ namespace Battleship
 
             SetUnitType(unitType, ref size, ref value);
 
-            CheckPath(dir, i, j,size,map);
-
-            PlaceUnit(value, map);
-            
-
+            if (CheckPath(dir, i, j, size, map))
+                PlaceUnit(value, map);
+            else
+            {
+                Console.WriteLine("NO SE PUDO PONER LA UNIDAD");
+                return false;
+            }
+            return true;
         }
         public void PlaceUnit(int value, Box[,] map)
         {
             try
             {
-                for (int i = 0; i < positionBuffer.Count; i++)
+                for (int i = 0; i < positionBuffer.Count; i+= 2)
                 {
                     int a = positionBuffer[i];
                     int b = positionBuffer[i + 1];
                     PlaceUnit(a, b, map,value);
                 }
-            }catch(Exception e) { Debug.WriteLine("SE INTENTÓ ACCEDER A UNA POSICIÓN FUERA DEL TAMAÑO DEL ARREGLO"); }
+            }catch(Exception e) { Console.WriteLine("SE INTENTÓ ACCEDER A UNA POSICIÓN FUERA DEL TAMAÑO DEL ARREGLO"); }
             
         }
         public void SetOwner(bool a, ref Box[,]b)
@@ -90,19 +93,19 @@ namespace Battleship
             {
                 case 1: //up
                     if (CheckPosition(i, j, map))
-                        CheckPath(dir, i - 1, j, size - 1, map);
+                        return CheckPath(dir, i - 1, j, size - 1, map);
                     break;
                 case -1://down
                     if (CheckPosition(i, j, map))
-                        CheckPath(dir, i + 1, j, size - 1, map);
+                        return CheckPath(dir, i + 1, j, size - 1, map);
                     break;
                 case 2://right
                     if (CheckPosition(i, j, map))
-                        CheckPath(dir, i, j + 1, size - 1, map);
+                        return CheckPath(dir, i, j + 1, size - 1, map);
                     break;
                 case -2://left
                     if (CheckPosition(i, j, map))
-                        CheckPath(dir, i - 1, j, size - 1, map);
+                        return CheckPath(dir, i - 1, j, size - 1, map);
                     break;
                 default:
                     break;
@@ -114,6 +117,7 @@ namespace Battleship
             try
             {
                 if (map[i, j] != null)
+                {
                     if (map[i, j].GetValue() == 0)
                     {
                         positionBuffer.Add(i);
@@ -121,8 +125,13 @@ namespace Battleship
                         return true;
                     }
                     else
+                    {
                         positionBuffer.Clear();
-            }catch(Exception e){ Debug.WriteLine("SE INTENTÓ ACCEDER A UN PUNTO FUERA DE LOS LIMITES"); }
+                        Console.WriteLine("HAY UN BARCO INTERCEPTANDO LA POSICION");
+                    }
+                }
+                    
+            }catch(Exception e){ Console.WriteLine("SE INTENTÓ ACCEDER A UN PUNTO FUERA DE LOS LIMITES"); }
 
             return false;
         }
@@ -147,6 +156,7 @@ namespace Battleship
                     value = 4;
                     break;
                 default:
+                    Console.WriteLine("NO ES UN TIPO DE BARCO");
                     break;
             }
         }
@@ -165,21 +175,25 @@ namespace Battleship
             {
                 for (int j = 0; j < Init.TAM; j++)
                 {
-                    Debug.Write("|" + mapP1[i, j].ToString() + "|");
+                    Console.Write("|" + mapP1[i, j].ToString() + "|");
                 }
-                Debug.WriteLine("");
+                Console.WriteLine("");
             }
 
-            Debug.WriteLine("------------------------------------------------");
+            Console.WriteLine("------------------------------------------------");
 
             for (int i = 0; i < Init.TAM; i++)
             {
                 for (int j = 0; j < Init.TAM; j++)
                 {
-                    Debug.Write("|" + mapP2[i, j].ToString() + "|");
+                    Console.Write("|" + mapP2[i, j].ToString() + "|");
                 }
-                Debug.WriteLine("");
+                Console.WriteLine("");
             }
+
+            Console.WriteLine("------------------------------------------------");
+            Console.WriteLine("------------------------------------------------");
+            Console.WriteLine("------------------------------------------------");
         }
         #endregion
 
