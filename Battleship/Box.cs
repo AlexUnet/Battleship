@@ -8,13 +8,31 @@ namespace Battleship
 {
     class Box
     {
+        #region Variables
+
         private int value;
         private bool taked;
+
+        #endregion
+
+        #region Constructor
 
         public Box()
         {
             value = 0;
             taked = false;
+        }
+
+        #endregion
+
+        #region SetsGets
+        public void SetTaked(bool taked)
+        {
+            this.taked = taked;
+        }
+        public void SetValue(int value)
+        {
+            this.value = value;
         }
 
         public bool GetTaked()
@@ -26,11 +44,17 @@ namespace Battleship
             return value;
         }
 
+        #endregion
+
+        #region SpecialFunctions
+
         override
         public String ToString()
         {
             return value.ToString();
         }
+
+        #endregion
 
     }
 }

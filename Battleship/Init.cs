@@ -18,7 +18,17 @@ namespace Battleship
         {
             Map map = new Map();
             map.InicializeMap();
+            map.SetUnit("Armored Boat", 1, 5, 5, true);
             map.PrintMap();
         }
+
+        #region SpecialFunctions
+
+        public static int randomN(int min,int max)
+        {
+            return new Random().Next(min, max);
+        }
+
+        #endregion
     }
 }
